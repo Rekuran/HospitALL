@@ -1,0 +1,41 @@
+# Maven
+**/target/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+.settings/
+.classpath
+.project
+.factorypath
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Temp
+tmp/
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.properties.local
+*.yaml.local
+*.yml.local
+credentials/
+*.pem
+*.key
+*.keystore
+*.jks
+
+# Databases
+*.mv.db
+*.trace.db
+*.sqlite
+*.sqlite3
