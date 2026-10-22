@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="20" style="-fx-padding: 20;">
+    <Label text="Appointments Management" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+</VBox>
