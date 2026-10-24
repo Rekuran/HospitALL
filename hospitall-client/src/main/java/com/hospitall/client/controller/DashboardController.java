@@ -1,5 +1,8 @@
 package com.hospitall.client.controller;
 
+import com.hospitall.client.HospitalClientApplication;
+import com.hospitall.client.service.AuthService;
+import com.hospitall.client.util.NavigationUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.BorderPane;
@@ -9,17 +12,20 @@ import java.io.IOException;
 public class DashboardController {
 
     @FXML private BorderPane mainView;
+    private final AuthService authService = HospitalClientApplication.getAuthService();
 
     private void loadView(String viewName) {
         try {
-            // Note: For simplicity in this demo stage, we assume a corresponding FXML exists.
-            // If you want to keep it simple, you could just update the center of the mainView with a Label.
-            // Here we'll just switch the content.
             Pane view = FXMLLoader.load(getClass().getResource("/com/hospitall/client/fxml/" + viewName + ".fxml"));
             mainView.setCenter(view);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML private void handleLogout() {
+        authService.logout();
+        NavigationUtils.navigateToLogin(mainView);
     }
 
     @FXML private void showDashboard() { loadView("dashboard_content"); }

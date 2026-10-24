@@ -2,6 +2,7 @@ package com.hospitall.client.controller;
 
 import java.io.IOException;
 
+import com.hospitall.client.HospitalClientApplication;
 import com.hospitall.client.service.AuthService;
 
 import javafx.fxml.FXML;
@@ -18,7 +19,7 @@ public class LoginController {
     @FXML private PasswordField passwordField;
     @FXML private Label messageLabel;
 
-    private final AuthService authService = new AuthService();
+    private final AuthService authService = HospitalClientApplication.getAuthService();
 
     @FXML
     private void handleRegister() throws IOException {

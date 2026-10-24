@@ -32,6 +32,8 @@
             <TableColumn fx:id="ageCol" text="Age" prefWidth="50"/>
             <TableColumn fx:id="genderCol" text="Gender" prefWidth="80"/>
             <TableColumn fx:id="contactCol" text="Contact" prefWidth="150"/>
+            <TableColumn fx:id="createdAtCol" text="Created" prefWidth="150"/>
+            <TableColumn fx:id="updatedAtCol" text="Updated" prefWidth="150"/>
         </columns>
     </TableView>
 </VBox>

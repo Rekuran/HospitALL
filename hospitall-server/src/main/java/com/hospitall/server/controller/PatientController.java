@@ -30,8 +30,10 @@ public class PatientController {
 
     @GetMapping
     public List<PatientDTO> getAll() {
-        return repository.findAll().stream()
-                .map(p -> new PatientDTO(p.getPatientId(), p.getName(), p.getAge(), p.getGender(), p.getContact()))
+        return repository.findAllByOrderByGenderAsc().stream()
+                .map(p -> new PatientDTO(p.getPatientId(), p.getName(), p.getAge(), p.getGender(), p.getContact(), 
+                        p.getCreatedAt() != null ? p.getCreatedAt().toString() : null, 
+                        p.getUpdatedAt() != null ? p.getUpdatedAt().toString() : null))
                 .collect(Collectors.toList());
     }
 

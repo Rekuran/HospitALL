@@ -25,9 +25,9 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody Map<String, String> credentials) {
-        if (userService.authenticate(credentials.get("username"), credentials.get("password"))) {
-            return ResponseEntity.ok("Login successful");
-        }
-        return ResponseEntity.status(401).body("Invalid credentials");
+        return userService.findByUsername(credentials.get("username"))
+                .filter(u -> userService.authenticate(credentials.get("username"), credentials.get("password")))
+                .map(u -> ResponseEntity.ok(com.hospitall.server.config.JwtAuthenticationFilter.generateToken(u.getUsername(), u.getRole())))
+                .orElse(ResponseEntity.status(401).body("Invalid credentials"));
     }
 }

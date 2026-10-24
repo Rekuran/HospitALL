@@ -1,5 +1,6 @@
 package com.hospitall.client;
 
+import com.hospitall.client.service.AuthService;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,6 +9,12 @@ import javafx.stage.Stage;
 import java.util.Objects;
 
 public class HospitalClientApplication extends Application {
+
+    private static final AuthService authService = new AuthService();
+
+    public static AuthService getAuthService() {
+        return authService;
+    }
 
     @Override
     public void start(Stage stage) throws Exception {

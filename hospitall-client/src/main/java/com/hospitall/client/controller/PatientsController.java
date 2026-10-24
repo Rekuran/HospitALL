@@ -1,11 +1,12 @@
 package com.hospitall.client.controller;
 
 import java.util.List;
-
+import com.hospitall.client.HospitalClientApplication;
 import com.hospitall.client.model.Patient;
 import com.hospitall.client.service.PatientService;
+import com.hospitall.client.util.NavigationUtils;
 import com.hospitall.shared.PatientDTO;
-
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -20,13 +21,23 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 public class PatientsController {
     @FXML private TableView<Patient> patientTable;
-    @FXML private TableColumn<Patient, String> idCol, nameCol, ageCol, genderCol, contactCol;
+    @FXML private TableColumn<Patient, String> idCol, nameCol, ageCol, genderCol, contactCol, createdAtCol, updatedAtCol;
     @FXML private TextField idField, nameField, ageField, genderField, contactField, searchField;
     @FXML private Label statusLabel;
 
     private final ObservableList<Patient> masterData = FXCollections.observableArrayList();
     private final FilteredList<Patient> filteredData = new FilteredList<>(masterData, p -> true);
-    private final PatientService patientService = new PatientService();
+    private final PatientService patientService = new PatientService(HospitalClientApplication.getAuthService());
+
+    private void handleException(Exception e, String context) {
+        if ("UNAUTHORIZED".equals(e.getMessage())) {
+            NavigationUtils.navigateToLogin(patientTable);
+        } else if ("HTTP 403".equals(e.getMessage())) {
+            Platform.runLater(() -> NavigationUtils.showAccessDenied("You do not have permission to perform this action."));
+        } else {
+            Platform.runLater(() -> statusLabel.setText(context + " error: " + e.getMessage()));
+        }
+    }
 
     @FXML
     public void initialize() {
@@ -35,6 +46,8 @@ public class PatientsController {
         ageCol.setCellValueFactory(new PropertyValueFactory<>("age"));
         genderCol.setCellValueFactory(new PropertyValueFactory<>("gender"));
         contactCol.setCellValueFactory(new PropertyValueFactory<>("contact"));
+        createdAtCol.setCellValueFactory(new PropertyValueFactory<>("createdAt"));
+        updatedAtCol.setCellValueFactory(new PropertyValueFactory<>("updatedAt"));
         patientTable.setItems(filteredData);
         loadPatients();
 
@@ -54,10 +67,10 @@ public class PatientsController {
     private void loadPatients() {
         try {
             List<PatientDTO> list = patientService.getAllPatients();
-            masterData.setAll(list.stream().map(d -> new Patient(d.getId(), d.getName(), d.getAge(), d.getGender(), d.getContact())).toList());
+            masterData.setAll(list.stream().map(d -> new Patient(d.getId(), d.getName(), d.getAge(), d.getGender(), d.getContact(), d.getCreatedAt(), d.getUpdatedAt())).toList());
             handleSearch(); // Re-apply search filter after reloading data
         } catch (Exception e) {
-            statusLabel.setText("Load error: " + e.getMessage());
+            handleException(e, "Load");
         }
     }
 
@@ -69,6 +82,7 @@ public class PatientsController {
             
             boolean matchId = p.getId() != null && p.getId().trim().toLowerCase().equals(filter);
             boolean matchAge = p.getAge() != null && p.getAge().trim().toLowerCase().equals(filter);
+            boolean matchGender = p.getGender() != null && p.getGender().toLowerCase().equals(filter);
             
             // For name and contact, use partial search only if filter is not purely numeric (or always partial)
             // But to avoid name/contact matching single digit IDs like '2', let's check if filter is numeric
@@ -87,7 +101,7 @@ public class PatientsController {
                 matchContact = p.getContact() != null && p.getContact().toLowerCase().contains(filter) && p.getContact().trim().toLowerCase().equals(filter);
             }
 
-            return matchId || matchName || matchAge || matchContact;
+            return matchId || matchName || matchAge || matchGender || matchContact;
         });
     }
 
@@ -97,13 +111,13 @@ public class PatientsController {
             statusLabel.setText("ID and Name are required.");
             return;
         }
-        PatientDTO dto = new PatientDTO(idField.getText(), nameField.getText(), ageField.getText(), genderField.getText(), contactField.getText());
+        PatientDTO dto = new PatientDTO(idField.getText(), nameField.getText(), ageField.getText(), genderField.getText(), contactField.getText(), null, null);
         try {
             patientService.addPatient(dto);
             loadPatients();
             clearFields();
         } catch (Exception e) {
-            statusLabel.setText("Add error: " + e.getMessage());
+            handleException(e, "Add");
         }
     }
 
@@ -111,13 +125,13 @@ public class PatientsController {
     private void handleEdit() {
         Patient selected = patientTable.getSelectionModel().getSelectedItem();
         if (selected == null) { statusLabel.setText("Select a patient."); return; }
-        PatientDTO dto = new PatientDTO(selected.getId(), nameField.getText(), ageField.getText(), genderField.getText(), contactField.getText());
+        PatientDTO dto = new PatientDTO(selected.getId(), nameField.getText(), ageField.getText(), genderField.getText(), contactField.getText(), null, null);
         try {
             patientService.updatePatient(dto);
             loadPatients();
             statusLabel.setText("Updated.");
         } catch (Exception e) {
-            statusLabel.setText("Update error: " + e.getMessage());
+            handleException(e, "Update");
         }
     }
 
@@ -132,7 +146,7 @@ public class PatientsController {
                 loadPatients();
                 clearFields();
             } catch (Exception e) {
-                statusLabel.setText("Delete error: " + e.getMessage());
+                handleException(e, "Delete");
             }
         }
     }

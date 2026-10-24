@@ -1,4 +1,4 @@
-# Maven
+# Maven build output
 **/target/
 
 # IDE
@@ -13,13 +13,15 @@
 # OS
 .DS_Store
 Thumbs.db
+Desktop.ini
 
 # Logs
 logs/
 *.log
 
-# Temp
+# Temporary files
 tmp/
+*.tmp
 
 # Secrets and local configuration
 .env
@@ -29,13 +31,27 @@ tmp/
 *.yaml.local
 *.yml.local
 credentials/
+secrets/
 *.pem
 *.key
 *.keystore
 *.jks
 
-# Databases
+# Local databases and database backups
 *.mv.db
 *.trace.db
 *.sqlite
 *.sqlite3
+*.db
+*.sql.bak
+*.dump
+*.backup
+
+# Local runtime data
+data/
+uploads/
+backups/
+
+# Java crash dumps
+hs_err_pid*
+replay_pid*

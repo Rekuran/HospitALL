@@ -1,5 +1,6 @@
 package com.hospitall.client.controller;
 
+import com.hospitall.client.HospitalClientApplication;
 import com.hospitall.client.service.AuthService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -17,7 +18,7 @@ public class RegisterController {
     @FXML private PasswordField passwordField;
     @FXML private Label statusLabel;
 
-    private final AuthService authService = new AuthService();
+    private final AuthService authService = HospitalClientApplication.getAuthService();
 
     @FXML
     private void handleRegister() {

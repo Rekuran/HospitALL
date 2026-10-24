@@ -14,35 +14,65 @@ public class PatientService {
     private static final String BASE_URL = "http://localhost:8080/api/patients";
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final AuthService authService;
+
+    public PatientService(AuthService authService) {
+        this.authService = authService;
+    }
+
+    private HttpRequest.Builder authenticatedRequestBuilder(String uri) {
+        HttpRequest.Builder builder = HttpRequest.newBuilder().uri(URI.create(uri));
+        String token = authService.getJwtToken();
+        if (token != null) {
+            builder.header("Authorization", "Bearer " + token);
+        }
+        return builder;
+    }
 
     public List<PatientDTO> getAllPatients() throws Exception {
-        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(BASE_URL)).GET().build();
+        HttpRequest request = authenticatedRequestBuilder(BASE_URL).GET().build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() == 401 || response.statusCode() == 403) {
+            authService.logout();
+            throw new Exception("UNAUTHORIZED");
+        }
         if (response.statusCode() != 200) throw new Exception("HTTP " + response.statusCode());
         return objectMapper.readValue(response.body(), new TypeReference<List<PatientDTO>>(){});
     }
 
     public void addPatient(PatientDTO p) throws Exception {
         String json = objectMapper.writeValueAsString(p);
-        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(BASE_URL))
+        HttpRequest request = authenticatedRequestBuilder(BASE_URL)
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(json)).build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() == 401 || response.statusCode() == 403) {
+            authService.logout();
+            throw new Exception("UNAUTHORIZED");
+        }
         if (response.statusCode() != 200) throw new Exception("HTTP " + response.statusCode());
     }
 
     public void updatePatient(PatientDTO p) throws Exception {
         String json = objectMapper.writeValueAsString(p);
-        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(BASE_URL + "/" + p.getId()))
+        HttpRequest request = authenticatedRequestBuilder(BASE_URL + "/" + p.getId())
                 .header("Content-Type", "application/json")
                 .PUT(HttpRequest.BodyPublishers.ofString(json)).build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() == 401 || response.statusCode() == 403) {
+            authService.logout();
+            throw new Exception("UNAUTHORIZED");
+        }
         if (response.statusCode() != 200) throw new Exception("HTTP " + response.statusCode());
     }
 
     public void deletePatient(String id) throws Exception {
-        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(BASE_URL + "/" + id)).DELETE().build();
+        HttpRequest request = authenticatedRequestBuilder(BASE_URL + "/" + id).DELETE().build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() == 401 || response.statusCode() == 403) {
+            authService.logout();
+            throw new Exception("UNAUTHORIZED");
+        }
         if (response.statusCode() != 200) throw new Exception("HTTP " + response.statusCode());
     }
 }
