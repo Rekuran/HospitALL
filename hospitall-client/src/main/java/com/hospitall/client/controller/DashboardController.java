@@ -28,9 +28,11 @@ public class DashboardController {
         NavigationUtils.navigateToLogin(mainView);
     }
 
-    @FXML private void showDashboard() { loadView("dashboard_content"); }
+    @FXML private void initialize() {
+        showAdminOverview();
+    }
+
     @FXML private void showPatients() { loadView("patients_view"); }
-    @FXML private void showDoctors() { loadView("doctors_view"); }
-    @FXML private void showAppointments() { loadView("appointments_view"); }
     @FXML private void showBilling() { loadView("billing_view"); }
+    @FXML private void showAdminOverview() { loadView("admin_overview"); }
 }

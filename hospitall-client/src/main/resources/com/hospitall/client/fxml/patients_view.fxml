@@ -12,16 +12,7 @@
     </HBox>
 
     <HBox spacing="10">
-        <TextField fx:id="idField" promptText="ID"/>
-        <TextField fx:id="nameField" promptText="Name"/>
-        <TextField fx:id="ageField" promptText="Age"/>
-        <TextField fx:id="genderField" promptText="Gender"/>
-        <TextField fx:id="contactField" promptText="Contact"/>
-    </HBox>
-    <HBox spacing="10">
-        <Button text="Add Patient" onAction="#handleAddPatient"/>
-        <Button text="Update" onAction="#handleEdit"/>
-        <Button text="Delete" onAction="#handleDelete"/>
+        <!-- CRUD buttons removed for Admin Dashboard read-only mode -->
     </HBox>
     <Label fx:id="statusLabel" textFill="red"/>
     

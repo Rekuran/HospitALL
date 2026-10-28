@@ -1,18 +1,18 @@
 package com.hospitall.client.controller;
 
 import java.util.List;
+
 import com.hospitall.client.HospitalClientApplication;
 import com.hospitall.client.model.Patient;
 import com.hospitall.client.service.PatientService;
 import com.hospitall.client.util.NavigationUtils;
 import com.hospitall.shared.PatientDTO;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -22,7 +22,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 public class PatientsController {
     @FXML private TableView<Patient> patientTable;
     @FXML private TableColumn<Patient, String> idCol, nameCol, ageCol, genderCol, contactCol, createdAtCol, updatedAtCol;
-    @FXML private TextField idField, nameField, ageField, genderField, contactField, searchField;
+    @FXML private TextField searchField;
     @FXML private Label statusLabel;
 
     private final ObservableList<Patient> masterData = FXCollections.observableArrayList();
@@ -52,16 +52,6 @@ public class PatientsController {
         loadPatients();
 
         searchField.textProperty().addListener((observable, oldValue, newValue) -> handleSearch());
-
-        patientTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
-            if (newSel != null) {
-                idField.setText(newSel.getId()); idField.setDisable(true);
-                nameField.setText(newSel.getName());
-                ageField.setText(newSel.getAge());
-                genderField.setText(newSel.getGender());
-                contactField.setText(newSel.getContact());
-            }
-        });
     }
 
     private void loadPatients() {
@@ -107,51 +97,22 @@ public class PatientsController {
 
     @FXML
     private void handleAddPatient() {
-        if (idField.getText().isEmpty() || nameField.getText().isEmpty()) {
-            statusLabel.setText("ID and Name are required.");
-            return;
-        }
-        PatientDTO dto = new PatientDTO(idField.getText(), nameField.getText(), ageField.getText(), genderField.getText(), contactField.getText(), null, null);
-        try {
-            patientService.addPatient(dto);
-            loadPatients();
-            clearFields();
-        } catch (Exception e) {
-            handleException(e, "Add");
-        }
+        // Admin Dashboard is read-only for Patients
+        statusLabel.setText("Modification not allowed in Admin Dashboard.");
     }
 
     @FXML
     private void handleEdit() {
-        Patient selected = patientTable.getSelectionModel().getSelectedItem();
-        if (selected == null) { statusLabel.setText("Select a patient."); return; }
-        PatientDTO dto = new PatientDTO(selected.getId(), nameField.getText(), ageField.getText(), genderField.getText(), contactField.getText(), null, null);
-        try {
-            patientService.updatePatient(dto);
-            loadPatients();
-            statusLabel.setText("Updated.");
-        } catch (Exception e) {
-            handleException(e, "Update");
-        }
+        // Admin Dashboard is read-only for Patients
+        statusLabel.setText("Modification not allowed in Admin Dashboard.");
     }
 
     @FXML
     private void handleDelete() {
-        Patient selected = patientTable.getSelectionModel().getSelectedItem();
-        if (selected == null) { statusLabel.setText("Select a patient."); return; }
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete this patient?");
-        if (alert.showAndWait().get() == ButtonType.OK) {
-            try {
-                patientService.deletePatient(selected.getId());
-                loadPatients();
-                clearFields();
-            } catch (Exception e) {
-                handleException(e, "Delete");
-            }
-        }
+        // Admin Dashboard is read-only for Patients
+        statusLabel.setText("Modification not allowed in Admin Dashboard.");
     }
 
     private void clearFields() {
-        idField.clear(); idField.setDisable(false); nameField.clear(); ageField.clear(); genderField.clear(); contactField.clear();
-    }
+   }
 }

@@ -6,23 +6,20 @@
             fx:controller="com.hospitall.client.controller.DashboardController" styleClass="dashboard-root">
     <left>
         <VBox styleClass="sidebar" spacing="10" prefWidth="200">
-            <Label text="HospitALL" styleClass="sidebar-header"/>
-            <Button text="Dashboard" maxWidth="Infinity" styleClass="nav-button" onAction="#showDashboard"/>
+            <Label text="Admin Dashboard" styleClass="sidebar-header"/>
+            <Button text="Admin Overview" maxWidth="Infinity" styleClass="nav-button" onAction="#showAdminOverview"/>
+            <Button text="Hospital Profile" maxWidth="Infinity" styleClass="nav-button"/>
+            <Button text="Staff &amp; Users" maxWidth="Infinity" styleClass="nav-button"/>
+            <Button text="Roles &amp; Permissions" maxWidth="Infinity" styleClass="nav-button"/>
+            <Button text="System Settings" maxWidth="Infinity" styleClass="nav-button"/>
             <Button text="Patients" maxWidth="Infinity" styleClass="nav-button" onAction="#showPatients"/>
-            <Button text="Doctors" maxWidth="Infinity" styleClass="nav-button" onAction="#showDoctors"/>
-            <Button text="Appointments" maxWidth="Infinity" styleClass="nav-button" onAction="#showAppointments"/>
             <Button text="Billing" maxWidth="Infinity" styleClass="nav-button" onAction="#showBilling"/>
+            <Button text="Log Out" maxWidth="Infinity" styleClass="nav-button" onAction="#handleLogout"/>
         </VBox>
     </left>
     <center>
         <VBox fx:id="contentArea" spacing="20" style="-fx-padding: 20;">
-            <Label text="Welcome back, Administrator" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-            <TilePane hgap="20" vgap="20">
-                <VBox styleClass="summary-card"><Label text="Total Patients" /><Label text="1,240" styleClass="card-value"/></VBox>
-                <VBox styleClass="summary-card"><Label text="Doctors" /><Label text="45" styleClass="card-value"/></VBox>
-                <VBox styleClass="summary-card"><Label text="Appointments" /><Label text="12" styleClass="card-value"/></VBox>
-                <VBox styleClass="summary-card"><Label text="Pending Bills" /><Label text="8" styleClass="card-value"/></VBox>
-            </TilePane>
+            <Label text="Welcome to HospitALL Dashboard" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
         </VBox>
     </center>
 </BorderPane>
