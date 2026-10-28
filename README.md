@@ -217,7 +217,6 @@ This cleans, compiles, packages, and installs the project modules while skipping
 Set the database environment variables according to the server configuration. For example, if the project uses these names, Windows PowerShell can set them for the current terminal session:
 
 ```powershell
-$env:SPRING_DATASOURCE_URL = "jdbc:mariadb://localhost:3306/hospitall_db"
 $env:SPRING_DATASOURCE_USERNAME = "your_database_user"
 $env:SPRING_DATASOURCE_PASSWORD = "your_database_password"
 ```
